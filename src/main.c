@@ -1,24 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <string.h>
+#include "string_utils.h"
 
-bool is_palindrome(const char *s){
-    size_t i = 0, j = strlen(s);
-    if (j == 0) { return true; }
-    j--; // last index
-
-    while (i < j){
-        #ifdef DEBUG
-            printf("[DBG] compare s[%lu]=%c vs s[%lu]=%c\n", i, s[i], j, s[j]);
-        #endif
-        
-        if (s[i] != s[j]) { return false; }
-        i++; j--;
-    }
-
-    return true;
-}
 
 #define ASSERT_TRUE(expr) do  { \
     if (!(expr)) { \
@@ -31,18 +15,19 @@ bool is_palindrome(const char *s){
 int main(int argc, char **argv) {
     // If you pass an arg, run the function on it and print result (quick manual test)
     if (argc > 1) {
-        printf("%s -> %s\n", argv[1], is_palindrome(argv[1]) ? "true" : "false");
+        const char *cmd = argv[1];
+        if (strcmp(cmd, "pal") == 0 && argc > 2) {
+            printf("%s -> %s\n", argv[2], is_palindrome(argv[2]) ? "true" : "false");
+        } else if (strcmp(cmd, "rev") == 0 && argc > 2) {
+            char buf[1024];
+            snprintf(buf, sizeof(buf), "%s", argv[2]);
+            reverse_str(buf);
+            printf("%s\n", buf);
+            return 0;
+        }
         return 0;
     }
 
-    // Otherwise, run small built-in tests (instant feedback)
-    ASSERT_TRUE(is_palindrome("") == true);
-    ASSERT_TRUE(is_palindrome("a") == true);
-    ASSERT_TRUE(is_palindrome("aa") == true);
-    ASSERT_TRUE(is_palindrome("ab") == false);
-    ASSERT_TRUE(is_palindrome("abba") == true);
-    ASSERT_TRUE(is_palindrome("abcd") == false);
-
-    printf("✅ All tests passed.\n");
+    printf("Usage:\n  app pal <word>\n  app rev <word>\n");
     return 0;
 }

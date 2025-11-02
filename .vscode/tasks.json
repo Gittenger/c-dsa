@@ -2,16 +2,31 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build-run (release)",
+      "label": "make: build",
       "type": "shell",
-      "command": "mkdir -p bin && gcc src/main.c -std=c17 -Wall -Wextra -O2 -o bin/app && ./bin/app",
-      "problemMatcher": "$gcc",
-      "group": "build"
+      "command": "make build",
+      "problemMatcher": "$gcc"
     },
     {
-      "label": "build-run (debug)",
+      "label": "make: run",
       "type": "shell",
-      "command": "mkdir -p bin && gcc src/main.c -std=c17 -Wall -Wextra -O0 -g -DDEBUG -o bin/app && ./bin/app",
+      "command": "make run",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "make: test",
+      "type": "shell",
+      "command": "make test",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "watch: tests",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "fd -e c -e h . src include tests | entr -c make -s test"
+      ],
       "problemMatcher": "$gcc",
       "group": {
         "kind": "build",
